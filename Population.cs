@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AE_2_Ziober
 {
     internal class Population
     {
-        private List<Entity> entities;
-        private double totalFitness;
+        public List<Entity> entities { get; set; }
+        public double totalFitness { get; set; }
 
         public Population(List<Entity> entities)
         {
@@ -18,6 +19,60 @@ namespace AE_2_Ziober
             {
                 totalFitness += entities[i].fitness;
             }
+            CountFitnessPercentsForEntities();
         }
+
+        public List<Entity> ChooseParentsForNextPopulation()
+        {
+            List<Entity> parentsForNextPopulation = new List<Entity>();
+            Random random = new Random();
+            while (parentsForNextPopulation.Count < entities.Count)
+            {
+                double randomValue = random.NextDouble();
+                double cumulativeProbability = 0;
+                Entity chosen = null;
+                foreach (Entity entity in entities)
+                {
+                    double epsilon = 1e-10;
+                    cumulativeProbability += entity.fitnessPercent;
+                    if (randomValue <= cumulativeProbability)
+                    {
+                        chosen = entity;
+                        break;
+                    }
+                }
+                if(chosen == null)
+                {
+                    chosen = entities[entities.Count - 1];
+                }
+                parentsForNextPopulation.Add(Entity.CopyEntity(chosen));
+            }
+            return parentsForNextPopulation;
+        }
+
+        public void CountFitnessPercentsForEntities()
+        {
+            for(int i = 0; i < entities.Count; i++)
+            {
+                entities[i].fitnessPercent = entities[i].fitness / totalFitness;
+            }
+        }
+
+        private static Population CopyPopulation(Population input)
+        {
+            List<Entity> entitiesCopy = new List<Entity>();
+            foreach(Entity en in input.entities)
+            {
+                List<City> citiesCopy = new List<City>();
+                foreach(City city in en.GetCitiesInOrder())
+                {
+                    citiesCopy.Add(new City(city.Name, city.X, city.Y));
+                }
+                entitiesCopy.Add(new Entity(citiesCopy));
+            }
+            Population populationCopy = new Population(entitiesCopy);
+            return populationCopy;
+        }
+
     }
 }

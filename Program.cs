@@ -21,7 +21,7 @@ class Program
 {
     static void Main(string[] args)
     {
-        var cities = new List<City>
+        List<City> cities = new List<City>
         {
             new City("A", 2, 1),
             new City("B", 9, 7),
@@ -35,99 +35,45 @@ class Program
             new City("J", 8, 10)
         };
 
-        var populationSize = 100;
-        var iterations = 1000;
-        var mutationProbability = 0.01;
+        int populationSize = 10;
+        int iterations = 1000;
+        double mutationProbability = 0.01;
+        List<Population> populationHistory = new List<Population>();
 
-        List<Entity> population = new List<Entity>();
+        List<Entity> entitiesList = new List<Entity>();
         for(int i = 0; i < populationSize; i++)
         {
-            population.Add(Entity.InitializeRandomEntity(cities));
+            entitiesList.Add(Entity.InitializeRandomEntity(cities));
         }
-       
-
-        Entity e1 = new Entity(new List<City>
+        
+        Population population = new Population(entitiesList);
+        populationHistory.Add(population);
+        /*foreach (Entity e in population.entities)
         {
-            // shuffle these citites
-            new City("C", 6, 5),
-            new City("B", 9, 7),
-            new City("J", 8, 10),
-            new City("G", 4, 2),
-            new City("A", 2, 1),
-            new City("I", 7, 3),
-            new City("F", 5, 6),
-            new City("D", 1, 7),
-            new City("E", 3, 6),
-            new City("H", 10, 4)
-        });
-        Entity e2 = new Entity(new List<City>
-        {
-            new City("J", 8, 10),
-            new City("I", 7, 3),
-            new City("E", 3, 6),
-            new City("A", 2, 1),
-            new City("C", 6, 5),
-            new City("B", 9, 7),
-            new City("D", 1, 7),
-            new City("H", 10, 4),
-            new City("G", 4, 2),
-            new City("F", 5, 6)
-        });
-        Console.WriteLine(e1.fitness);
-        Console.WriteLine(e1.totalLength);
-        Console.WriteLine(e2.fitness);
-        Console.WriteLine(e2.totalLength);
-
-        for (int i = 0; i < e1.GetCitiesInOrder().Count; i++)
-        {
-            Console.Write(e1.GetCitiesInOrder()[i].Name + " ");
+            Console.WriteLine(e.GetPopulationCode());
         }
         Console.WriteLine();
-        for (int i = 0; i < e2.GetCitiesInOrder().Count; i++)
-        {
-            Console.Write(e2.GetCitiesInOrder()[i].Name + " ");
-        }
-        Console.WriteLine("\n");
-        List<Entity> childs = GeneticOperations.CycleCrossover(e1, e2);
-        Entity child1 = childs[0];
-        Entity child2 = childs[1];
-        for (int i = 0; i < child1.GetCitiesInOrder().Count; i++)
-        {
-            Console.Write(child1.GetCitiesInOrder()[i].Name + " ");
-        }
-        Console.WriteLine();
-        for (int i = 0; i < child2.GetCitiesInOrder().Count; i++)
-        {
-            Console.Write(child2.GetCitiesInOrder()[i].Name + " ");
-        }
-
-        /*for (int i = 0; i < cities.Count; i++)
-        {
-            //Console.WriteLine(population.GetCitiesInOrder().Count);
-            Console.WriteLine(population.GetCitiesInOrder()[i]);
-        }
-        Console.WriteLine(population.GetTotalLength());
-        Console.WriteLine(population.GetPopulationCode());
         */
-
-
-
-        /*
-        var population = new Population(cities, populationSize, mutationProbability);
-        var best = population.Best;
-
-        for (var i = 0; i < iterations; i++)
+        List<Entity> parents = population.ChooseParentsForNextPopulation();
+        
+        List<Entity> children = new List<Entity>();
+        for(int i = 0; i < populationSize / 2; i++)
         {
-            population.NextGeneration();
-            best = population.Best;
+            List<Entity> childs = GeneticOperations.CycleCrossover(Entity.CopyEntity(parents[i * 2]), Entity.CopyEntity(parents[i * 2 + 1]));
+            children.Add(childs[0]);
+            children.Add(childs[1]);
         }
+        foreach (Entity e in parents)
+        {
+            Console.WriteLine(e.GetPopulationCode());
+        }
+        Console.WriteLine("\nChildren: ");
+        foreach(Entity child in children)
+        {
+            Console.WriteLine(child.GetPopulationCode());
+        }
+        
 
-        Console.WriteLine($"Best: {best}");
-        Console.WriteLine($"Distance: {best.Distance}");
-        Console.WriteLine($"Fitness: {best.Fitness}");
-        Console.WriteLine($"Iterations: {iterations}");
-        Console.WriteLine($"Population size: {populationSize}");
-        Console.WriteLine($"Mutation probability: {mutationProbability}");
-        */
+
     }
 }

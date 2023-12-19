@@ -13,6 +13,7 @@ namespace AE_2_Ziober
 
         public double totalLength { get; set; }
         public double fitness { get; set; }
+        public double fitnessPercent { get; set; }
 
         public Entity()
         {
@@ -83,6 +84,16 @@ namespace AE_2_Ziober
             }
             return code;
         }
+
+        public static Entity CopyEntity(Entity entity)
+        {
+            List<City> citiesCopy = new List<City>();
+            foreach (City city in entity.GetCitiesInOrder())
+            {
+                citiesCopy.Add(new City(city.Name, city.X, city.Y));
+            }
+            return new Entity(citiesCopy);
+        }   
 
         private static List<City> copyList(List<City> list)
         {
