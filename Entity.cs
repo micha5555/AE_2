@@ -12,7 +12,7 @@ namespace AE_2_Ziober
         private List<City> citiesInOrder = new List<City>();
 
         public double totalLength { get; set; }
-        public double fitness { get; set; }
+        public double inverseLength { get; set; }
         public double fitnessPercent { get; set; }
 
         public Entity()
@@ -27,7 +27,7 @@ namespace AE_2_Ziober
             {
                 totalLength += cities[i].DistanceTo(cities[i + 1]);
             }
-            fitness = 1 / totalLength;
+            inverseLength = 1 / totalLength;
         }
 
         public static Entity InitializeRandomEntity(List<City> cities)
@@ -51,7 +51,7 @@ namespace AE_2_Ziober
                 //Console.WriteLine(cities[i].DistanceTo(cities[i + 1]));
             }
             entity.totalLength = length;
-            entity.fitness = 1 / length;
+            entity.inverseLength = 1 / length;
             return entity;
         }
 
@@ -75,7 +75,7 @@ namespace AE_2_Ziober
             return citiesInOrder;
         }
 
-        public String GetPopulationCode()
+        public String GetEntityCode()
         {
             String code = "";
             foreach(City city in citiesInOrder)

@@ -77,12 +77,46 @@ class Program
         {
             Console.WriteLine(populationHistory[0].entities[0].GetPopulationCode() + " " + entity.totalLength);
         }*/
-        Console.WriteLine(populationHistory[0].entities[0].GetPopulationCode() + " " + populationHistory[0].entities[0].totalLength);
-        Console.WriteLine(populationHistory[iterations / 4].entities[0].GetPopulationCode() + " " + populationHistory[iterations / 4].entities[0].totalLength);
-        Console.WriteLine(populationHistory[iterations / 3].entities[0].GetPopulationCode() + " " + populationHistory[iterations / 3].entities[0].totalLength);
-        Console.WriteLine(populationHistory[iterations / 2].entities[0].GetPopulationCode() + " " + populationHistory[iterations / 2].entities[0].totalLength);
-        Console.WriteLine(populationHistory[iterations - 1].entities[0].GetPopulationCode() + " " + populationHistory[iterations - 1].entities[0].totalLength);
+        Entity entityWithLongestPath = FindEntityWithLongestPath(populationHistory);
+        Entity entityWithShortestPath = FindEntityWithShortestPath(populationHistory);
+        Console.WriteLine("Entity with longest path: " + entityWithLongestPath.GetEntityCode() + " " + entityWithLongestPath.totalLength); // DEFJBHICGA
+        Console.WriteLine("Entity with shortest path: " + entityWithShortestPath.GetEntityCode() + " " + entityWithShortestPath.totalLength);
 
         // DEFJBHICGA
+    }
+
+    private static Entity FindEntityWithLongestPath(List<Population> populationHistory) { 
+        Entity entityWithLongestPath = null;
+        double longestPath = 0;
+        foreach(Population population in populationHistory)
+        {
+            foreach(Entity entity in population.entities)
+            {
+                if(entity.totalLength > longestPath)
+                {
+                    longestPath = entity.totalLength;
+                    entityWithLongestPath = entity;
+                }
+            }
+        }
+        return entityWithLongestPath;
+    }
+
+    private static Entity FindEntityWithShortestPath(List<Population> populationHistory)
+    {
+        Entity entityWithShortestPath = null;
+        double shortestPath = 0;
+        foreach (Population population in populationHistory)
+        {
+            foreach (Entity entity in population.entities)
+            {
+                if (entity.totalLength < shortestPath || shortestPath == 0)
+                {
+                    shortestPath = entity.totalLength;
+                    entityWithShortestPath = entity;
+                }
+            }
+        }
+        return entityWithShortestPath;
     }
 }

@@ -86,31 +86,5 @@ namespace AE_2_Ziober
 
             return new List<Entity> { firstChild, secondChild };
         }
-
-        // ???
-        /*public static void CXCrossover(List<Entity> entites)
-        {
-               Random random = new Random();
-            int firstEntityIndex = random.Next(0, entites.Count);
-            int secondEntityIndex = random.Next(0, entites.Count);
-            while (firstEntityIndex == secondEntityIndex)
-            {
-                secondEntityIndex = random.Next(0, entites.Count);
-            }
-            Entity firstEntity = entites[firstEntityIndex];
-            Entity secondEntity = entites[secondEntityIndex];
-            int firstEntitySize = firstEntity.GetCitiesInOrder().Count;
-            int secondEntitySize = secondEntity.GetCitiesInOrder().Count;
-            int firstEntityRandomIndex = random.Next(0, firstEntitySize);
-            int secondEntityRandomIndex = random.Next(0, secondEntitySize);
-            while (firstEntityRandomIndex == secondEntityRandomIndex)
-            {
-                secondEntityRandomIndex = random.Next(0, secondEntitySize);
-            }
-            City firstEntityRandomCity = firstEntity.GetCitiesInOrder()[firstEntityRandomIndex];
-            City secondEntityRandomCity = secondEntity.GetCitiesInOrder()[secondEntityRandomIndex];
-            firstEntity.GetCitiesInOrder()[firstEntityRandomIndex] = secondEntityRandomCity;
-            secondEntity.GetCitiesInOrder()[secondEntityRandomIndex] = firstEntityRandomCity;
-        }*/
     }
 }

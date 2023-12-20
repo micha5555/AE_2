@@ -11,15 +11,19 @@ namespace AE_2_Ziober
     {
         public List<Entity> entities { get; set; }
         public double totalFitness { get; set; }
+        public double shortestPath { get; set; }
+        public double longestPath { get; set; }
+        public double averagePath { get; set; }
 
         public Population(List<Entity> entities)
         {
             this.entities = entities;
             for(int i = 0; i < entities.Count; i++)
             {
-                totalFitness += entities[i].fitness;
+                totalFitness += entities[i].inverseLength;
             }
             CountFitnessPercentsForEntities();
+            CountPaths();
         }
 
         public List<Entity> ChooseParentsForNextPopulation()
@@ -54,8 +58,25 @@ namespace AE_2_Ziober
         {
             for(int i = 0; i < entities.Count; i++)
             {
-                entities[i].fitnessPercent = entities[i].fitness / totalFitness;
+                entities[i].fitnessPercent = entities[i].inverseLength / totalFitness;
             }
+        }
+
+        private void CountPaths()
+        {
+            foreach(Entity entity in entities)
+            {
+                if(entity.totalLength < shortestPath || shortestPath == 0)
+                {
+                    shortestPath = entity.totalLength;
+                }
+                if(entity.totalLength > longestPath)
+                {
+                    longestPath = entity.totalLength;
+                }
+                averagePath += entity.totalLength;
+            }
+            averagePath /= entities.Count;
         }
 
         private static Population CopyPopulation(Population input)
