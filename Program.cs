@@ -35,9 +35,9 @@ class Program
             new City("J", 8, 10)
         };
 
-        int populationSize = 10;
-        int iterations = 1000;
-        double mutationProbability = 0.01;
+        int populationSize = 200;
+        int iterations = 100;
+        double mutationProbability = 0.005;
         List<Population> populationHistory = new List<Population>();
 
         List<Entity> entitiesList = new List<Entity>();
@@ -47,33 +47,42 @@ class Program
         }
         
         Population population = new Population(entitiesList);
-        populationHistory.Add(population);
-        /*foreach (Entity e in population.entities)
-        {
-            Console.WriteLine(e.GetPopulationCode());
-        }
-        Console.WriteLine();
-        */
-        List<Entity> parents = population.ChooseParentsForNextPopulation();
-        
-        List<Entity> children = new List<Entity>();
-        for(int i = 0; i < populationSize / 2; i++)
-        {
-            List<Entity> childs = GeneticOperations.CycleCrossover(Entity.CopyEntity(parents[i * 2]), Entity.CopyEntity(parents[i * 2 + 1]));
-            children.Add(childs[0]);
-            children.Add(childs[1]);
-        }
-        foreach (Entity e in parents)
-        {
-            Console.WriteLine(e.GetPopulationCode());
-        }
-        Console.WriteLine("\nChildren: ");
-        foreach(Entity child in children)
-        {
-            Console.WriteLine(child.GetPopulationCode());
-        }
         
 
+        for(int i = 0; i < iterations; i++)
+        {
+            List<Entity> parents = population.ChooseParentsForNextPopulation();
 
+            List<Entity> children = new List<Entity>();
+            for (int j = 0; j < populationSize / 2; j++)
+            {
+                List<Entity> childs = GeneticOperations.CycleCrossover(Entity.CopyEntity(parents[j * 2]), Entity.CopyEntity(parents[j * 2 + 1]));
+                children.Add(childs[0]);
+                children.Add(childs[1]);
+            }
+            Random random = new Random();
+            foreach (Entity child in children)
+            {
+                double randomValue = random.NextDouble();
+                if (randomValue < mutationProbability)
+                {
+                    GeneticOperations.Mutate(child);
+                }
+            }
+            populationHistory.Add(population);
+            population = new Population(children);
+        }
+        Console.WriteLine("Population history size " + populationHistory.Count);
+        /*foreach(Entity entity in populationHistory[populationHistory.Count - 1].entities)
+        {
+            Console.WriteLine(populationHistory[0].entities[0].GetPopulationCode() + " " + entity.totalLength);
+        }*/
+        Console.WriteLine(populationHistory[0].entities[0].GetPopulationCode() + " " + populationHistory[0].entities[0].totalLength);
+        Console.WriteLine(populationHistory[iterations / 4].entities[0].GetPopulationCode() + " " + populationHistory[iterations / 4].entities[0].totalLength);
+        Console.WriteLine(populationHistory[iterations / 3].entities[0].GetPopulationCode() + " " + populationHistory[iterations / 3].entities[0].totalLength);
+        Console.WriteLine(populationHistory[iterations / 2].entities[0].GetPopulationCode() + " " + populationHistory[iterations / 2].entities[0].totalLength);
+        Console.WriteLine(populationHistory[iterations - 1].entities[0].GetPopulationCode() + " " + populationHistory[iterations - 1].entities[0].totalLength);
+
+        // DEFJBHICGA
     }
 }
