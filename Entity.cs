@@ -60,16 +60,6 @@ namespace AE_2_Ziober
             citiesInOrder.Add(city);
         }
 
-        /*public void SetTotalLength(double length)
-        {
-            totalLength = length;
-        }*/
-
-        /*public double GetTotalLength()
-        {
-            return totalLength;
-        }*/
-
         public List<City> GetCitiesInOrder()
         {
             return citiesInOrder;
@@ -80,7 +70,7 @@ namespace AE_2_Ziober
             String code = "";
             foreach(City city in citiesInOrder)
             {
-                code += city.Name;
+                code += city.name;
             }
             return code;
         }
@@ -90,7 +80,7 @@ namespace AE_2_Ziober
             List<City> citiesCopy = new List<City>();
             foreach (City city in entity.GetCitiesInOrder())
             {
-                citiesCopy.Add(new City(city.Name, city.X, city.Y));
+                citiesCopy.Add(new City(city.name, city.x, city.y));
             }
             return new Entity(citiesCopy);
         }   
@@ -100,7 +90,7 @@ namespace AE_2_Ziober
             List<City> copy = new List<City>();
             foreach(City city in list)
             {
-                copy.Add(new City(city.Name, city.X, city.Y));
+                copy.Add(new City(city.name, city.x, city.y));
             }
             return copy;
         }

@@ -87,7 +87,7 @@ namespace AE_2_Ziober
                 List<City> citiesCopy = new List<City>();
                 foreach(City city in en.GetCitiesInOrder())
                 {
-                    citiesCopy.Add(new City(city.Name, city.X, city.Y));
+                    citiesCopy.Add(new City(city.name, city.x, city.y));
                 }
                 entitiesCopy.Add(new Entity(citiesCopy));
             }

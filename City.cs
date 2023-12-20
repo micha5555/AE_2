@@ -8,21 +8,21 @@ namespace AE_2_Ziober
 {
     public class City
     {
-        public string Name { get; }
-        public int X { get; }
-        public int Y { get; }
+        public string name { get; }
+        public double x { get; }
+        public double y { get; }
 
-        public City(string name, int x, int y)
+        public City(string name, double x, double y)
         {
-            Name = name;
-            X = x;
-            Y = y;
+            this.name = name;
+            this.x = x;
+            this.y = y;
         }
 
         public double DistanceTo(City city)
         {
-            var xDistance = Math.Abs(X - city.X);
-            var yDistance = Math.Abs(Y - city.Y);
+            var xDistance = Math.Abs(x - city.x);
+            var yDistance = Math.Abs(y - city.y);
             var distance = Math.Sqrt(Math.Pow(xDistance, 2) + Math.Pow(yDistance, 2));
 
             return distance;
@@ -30,7 +30,7 @@ namespace AE_2_Ziober
 
         public override string ToString()
         {
-            return Name + "(" + X + ", " + Y + ")";
+            return name + "(" + x + ", " + y + ")";
         }
 
         public override bool Equals(object? obj)
@@ -38,7 +38,7 @@ namespace AE_2_Ziober
             if (obj == null || !(obj is City)) return false;
             
             City casted = obj as City;
-            return Name.Equals(casted.Name) && X == casted.X && Y == casted.Y;
+            return name.Equals(casted.name) && x == casted.x && y == casted.y;
 
         }
     }

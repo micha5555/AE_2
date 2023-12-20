@@ -1,6 +1,11 @@
 ﻿using AE_2_Ziober;
-using System.Security.Cryptography;
+using System;
+using System.Drawing;
+using System.IO;
+using ScottPlot;
+
 /*
+Michał Ziober 311612
 Zadanie 2
 
 Napisać program rozwiązujący problem komiwojażera (minimalizacja drogi pomiędzy n miastami bez powtórzeń) przy pomocy algorytmu genetycznego. Zastosować reprodukcję przy użyciu nieproporcjonalnej ruletki, operator krzyżowania CX, oraz mutację równomierną.
@@ -15,29 +20,16 @@ Dane testowe: miasta:
 A(2, 1), B(9, 7), C(6, 5), D(1, 7), E(3, 6), F(5, 6), G(4, 2), H(10, 4), I(7, 3), J(8, 10)
 */
 
-// See https://aka.ms/new-console-template for more information
-
 class Program
 {
     static void Main(string[] args)
     {
-        List<City> cities = new List<City>
-        {
-            new City("A", 2, 1),
-            new City("B", 9, 7),
-            new City("C", 6, 5),
-            new City("D", 1, 7),
-            new City("E", 3, 6),
-            new City("F", 5, 6),
-            new City("G", 4, 2),
-            new City("H", 10, 4),
-            new City("I", 7, 3),
-            new City("J", 8, 10)
-        };
+        Config config = Config.ReadConfig();
+        List<City> cities = config.cities;
+        int populationSize = config.populationSize;
+        int iterations = config.iterations;
+        double mutationProbability = config.mutationProbability;
 
-        int populationSize = 200;
-        int iterations = 100;
-        double mutationProbability = 0.005;
         List<Population> populationHistory = new List<Population>();
 
         List<Entity> entitiesList = new List<Entity>();
@@ -72,19 +64,23 @@ class Program
             populationHistory.Add(population);
             population = new Population(children);
         }
-        Console.WriteLine("Population history size " + populationHistory.Count);
-        /*foreach(Entity entity in populationHistory[populationHistory.Count - 1].entities)
-        {
-            Console.WriteLine(populationHistory[0].entities[0].GetPopulationCode() + " " + entity.totalLength);
-        }*/
+        
         Entity entityWithLongestPath = FindEntityWithLongestPath(populationHistory);
         Entity entityWithShortestPath = FindEntityWithShortestPath(populationHistory);
-        Console.WriteLine("Entity with longest path: " + entityWithLongestPath.GetEntityCode() + " " + entityWithLongestPath.totalLength); // DEFJBHICGA
-        Console.WriteLine("Entity with shortest path: " + entityWithShortestPath.GetEntityCode() + " " + entityWithShortestPath.totalLength);
+        Console.WriteLine("Entity with longest path: " + entityWithLongestPath.GetEntityCode() + ", path length: " + entityWithLongestPath.totalLength); // DEFJBHICGA
+        Console.WriteLine("Entity with shortest path: " + entityWithShortestPath.GetEntityCode() + ", path length: " + entityWithShortestPath.totalLength);
 
-        // DEFJBHICGA
+        
+        string pathToProject = System.IO.Path.GetFullPath(@"..\..\..\");
+        Console.WriteLine("Charts are being saved in path: " + pathToProject);
+
+        Plot pathLengthsPlot = ChartsMaker.CreateFitnessChart(populationHistory, config);
+        Plot worstPathCityPlot = ChartsMaker.CreateCityChart(entityWithLongestPath, config);
+        Plot bestPathCityPlot = ChartsMaker.CreateCityChart(entityWithShortestPath, config);
+        pathLengthsPlot.SaveFig(pathToProject + "/charts/path_lengths_by_iterations.png");
+        worstPathCityPlot.SaveFig(pathToProject + "/charts/worst_path.png");
+        bestPathCityPlot.SaveFig(pathToProject + "/charts/best_path.png");
     }
-
     private static Entity FindEntityWithLongestPath(List<Population> populationHistory) { 
         Entity entityWithLongestPath = null;
         double longestPath = 0;
